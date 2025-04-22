@@ -10,29 +10,42 @@
     body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
     section#home, section#about { min-height: 100vh; display: flex; align-items: center; }
     section#home { padding-top: 0 !important; padding-bottom: 0 !important; }
+
+    @keyframes gradient-bg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .bg-animated {
+      background: linear-gradient(-45deg, #2563eb, #3b82f6, #1e40af, #60a5fa);
+      background-size: 300% 300%;
+      animation: gradient-bg 10s ease infinite;
+    }
+
   </style>
 </head>
 <body class="bg-white text-gray-800">
   <!-- Navbar -->
-  <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+  <header class="bg-transparent  fixed top-0 left-0 w-full z-50">
     <div class="container mx-auto flex justify-between items-center py-4 px-4">
-      <div class="text-xl font-bold text-blue-600">PCC</div>
-      <nav class="space-x-6">
-        <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium scroll-link">Home</a>
-        <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium scroll-link">About</a>
-        <a href="#gallery" class="text-gray-700 hover:text-blue-600 font-medium scroll-link">Gallery</a>
+      <nav class="space-x-6 mx-auto">
+        <a href="#home" class="hover:text-blue-600 font-bold scroll-link text-xl">Home</a>
+        <a href="#about" class="hover:text-blue-600 font-bold scroll-link text-xl">About</a>
+        <a href="#gallery" class="hover:text-blue-600 font-bold scroll-link text-xl">Gallery</a>
       </nav>
     </div>
   </header>
 
   <main>
     <!-- Hero Section -->
-    <section id="home" class="bg-blue-600 text-white">
-      <div class="container mx-auto text-center px-4 flex flex-col justify-center items-center h-full">
+    <section id="home" class="bg-animated text-white relative overflow-hidden">
+      <div class="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+      <div class="container mx-auto text-center px-4 flex flex-col justify-center items-center h-full relative z-20">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">PCC - Politeknik Negeri Semarang</h1>
         <p class="text-lg md:text-xl">Unit Kegiatan Mahasiswa yang berfokus pada Teknologi dan Komputer</p>
       </div>
     </section>
+    
 
     <!-- Tentang PCC -->
     <section id="about" class="bg-gray-100">
@@ -109,6 +122,40 @@
         }
       });
     });
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll("a.scroll-link");
+
+    // Fungsi untuk mengubah warna navbar berdasarkan section aktif
+    const updateNavLinkColor = () => {
+      let current = "";
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - 80; // untuk mengimbangi navbar
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      // Jika di section home, semua nav link jadi putih
+      if (current === "home") {
+        navLinks.forEach((link) => {
+          link.classList.remove("text-gray-800");
+          link.classList.add("text-white");
+        });
+      } else {
+        // Jika tidak di home, semua nav link jadi dark gray
+        navLinks.forEach((link) => {
+          link.classList.remove("text-white");
+          link.classList.add("text-gray-800");
+        });
+      }
+    };
+
+    // Menjalankan fungsi pertama kali saat halaman dimuat
+    updateNavLinkColor();
+
+    // Mengatur perubahan warna navbar saat scroll
+    window.addEventListener("scroll", updateNavLinkColor);
   </script>
 </body>
 </html>
